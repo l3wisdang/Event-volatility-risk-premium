@@ -1,0 +1,256 @@
+planted variance risk premium : 25%
+events generated              : 82
+planted mean implied move     : 0.0705
+planted mean |realised| move  : 0.0493
+
+
+##############################################################################
+# A. mid-to-mid, no costs (how the tutorial builds measure it)
+##############################################################################
+==============================================================================
+EVENT VARIANCE RISK PREMIUM STUDY
+==============================================================================
+Coverage: 82/82 events usable
+
+-- Implied vs realised event move --------------------------------------------
+                                                 value      lo      hi
+metric                                                                
+n events                                       82.0000     NaN     NaN
+mean implied event move                         0.0705     NaN     NaN
+mean |realised| event move                      0.0494     NaN     NaN
+variance premium (implied/realised - 1)         0.3177     NaN     NaN
+mean variance spread (implied^2 - realised^2)   0.0013 -0.0003  0.0026
+median move ratio                               0.6100     NaN     NaN
+mean move ratio                                 0.7082     NaN     NaN
+P(ratio > 1)                                    0.2317     NaN     NaN
+P(ratio > 2)                                    0.0366     NaN     NaN
+ratio 90th pct                                  1.3571     NaN     NaN
+ratio 99th pct                                  2.5791     NaN     NaN
+median implied/realised variance ratio          2.6883     NaN     NaN
+
+-- Short straddle, net of costs ----------------------------------------------
+                                      value
+metric                                     
+trades                              82.0000
+hit rate                             0.6951
+mean net P&L per trade             262.3894
+  bootstrap 95% lo                 -31.2995
+  bootstrap 95% hi                 513.2832
+  P(mean <= 0)                       0.0380
+mean return on credit                0.1005
+  bootstrap 95% lo                  -0.0395
+  bootstrap 95% hi                   0.2266
+mean winner                        905.5133
+mean loser                       -1203.9330
+worst trade                      -3497.9487
+losers to wipe out all wins         42.8714
+Sharpe (per event)                   0.1646
+skew of returns                     -2.2939
+excess kurtosis                      6.9276
+deflated SR prob (n_trials=1)        0.8916
+min track record length (events)   144.6534
+
+-- Volatility regime overlay -------------------------------------------------
+  states selected by BIC: 3  (candidates (1, 2, 3))
+  primary evidence -- BIC(k=1) - BIC(k=3) = 3904.7  (positive favours regimes; this is computed on the observations, not on labels)
+  parameters estimated on the FULL sample: state labels are in-sample at the
+  parameter level. Pass fit_regime(fit_through=...) for the walk-forward version.
+  secondary -- Markov-order LR on filtered labels: stat=4528.3 df=4 p=0  [confounded: the filter's own sticky prior induces label dependence, so a small p here is partly the machinery]
+  time-homogeneity LR (2 splits): p=0.988
+  -> states [0, 1] have an expected duration below 3 bars. A state you leave almost immediately is not a regime, it is a flexible density; do not condition a trade on it.
+  GaussianHMM(n_states=3)  loglik=14958.36  BIC=-29797.19  converged=True
+  state       mean        sd    stationary   exp.duration
+      0    0.017289  0.006651       0.4312          2.57
+      1    0.028030  0.009417       0.2686          1.59
+      2    0.049126  0.021766       0.3002         23.39
+  transition matrix:
+    0.6108  0.3774  0.0118
+    0.5981  0.3730  0.0289
+    0.0238  0.0190  0.9573
+
+-- Conditional performance ---------------------------------------------------
+         n  hit_rate  mean_pnl   boot_lo   boot_hi  p_le_zero      worst
+regime                                                                  
+0       43    0.6977  260.0812 -135.2807  627.0034     0.1000 -3497.9487
+1       16    0.5625 -113.3377 -753.9329  430.5262     0.6587 -2222.8211
+2       23    0.7826  528.0802   91.1234  974.1952     0.0150 -2727.0872
+
+  Read this table with three caveats:
+  1. A regime is only useful if the intervals do NOT overlap. Overlapping
+     intervals mean you split a small sample, not that you found a conditional edge.
+  2. Splitting 3 ways is 3 more tests. The p_le_zero column is NOT corrected
+     for that; a Bonferroni-style reading multiplies each by 3. The smallest cell here holds 16 trades.
+  3. The HMM parameters were fitted on the whole bar history, so the state
+     labels are in-sample at the parameter level even though the filter itself
+     uses no future data. See fit_regime(fit_through=...) for the walk-forward version.
+
+VERDICT: UNDERPOWERED: needs ~145 events to distinguish this Sharpe from zero; you have 82.
+==============================================================================
+
+
+##############################################################################
+# B. 2% half-spread, $0.65 commission (a good retail fill)
+##############################################################################
+==============================================================================
+EVENT VARIANCE RISK PREMIUM STUDY
+==============================================================================
+Coverage: 82/82 events usable
+
+-- Implied vs realised event move --------------------------------------------
+                                                 value      lo      hi
+metric                                                                
+n events                                       82.0000     NaN     NaN
+mean implied event move                         0.0705     NaN     NaN
+mean |realised| event move                      0.0494     NaN     NaN
+variance premium (implied/realised - 1)         0.3177     NaN     NaN
+mean variance spread (implied^2 - realised^2)   0.0013 -0.0003  0.0026
+median move ratio                               0.6100     NaN     NaN
+mean move ratio                                 0.7082     NaN     NaN
+P(ratio > 1)                                    0.2317     NaN     NaN
+P(ratio > 2)                                    0.0366     NaN     NaN
+ratio 90th pct                                  1.3571     NaN     NaN
+ratio 99th pct                                  2.5791     NaN     NaN
+median implied/realised variance ratio          2.6883     NaN     NaN
+
+-- Short straddle, net of costs ----------------------------------------------
+                                      value
+metric                                     
+trades                              82.0000
+hit rate                             0.6951
+mean net P&L per trade             175.2093
+  bootstrap 95% lo                -121.8891
+  bootstrap 95% hi                 434.1268
+  P(mean <= 0)                       0.1053
+mean return on credit                0.0638
+  bootstrap 95% lo                  -0.0819
+  bootstrap 95% hi                   0.1950
+mean winner                        833.8560
+mean loser                       -1326.5053
+worst trade                      -3622.4707
+losers to wipe out all wins         35.8308
+Sharpe (per event)                   0.1004
+skew of returns                     -2.2939
+excess kurtosis                      6.9276
+deflated SR prob (n_trials=1)        0.7902
+min track record length (events)   337.4003
+
+-- Volatility regime overlay -------------------------------------------------
+  states selected by BIC: 3  (candidates (1, 2, 3))
+  primary evidence -- BIC(k=1) - BIC(k=3) = 3904.7  (positive favours regimes; this is computed on the observations, not on labels)
+  parameters estimated on the FULL sample: state labels are in-sample at the
+  parameter level. Pass fit_regime(fit_through=...) for the walk-forward version.
+  secondary -- Markov-order LR on filtered labels: stat=4528.3 df=4 p=0  [confounded: the filter's own sticky prior induces label dependence, so a small p here is partly the machinery]
+  time-homogeneity LR (2 splits): p=0.988
+  -> states [0, 1] have an expected duration below 3 bars. A state you leave almost immediately is not a regime, it is a flexible density; do not condition a trade on it.
+  GaussianHMM(n_states=3)  loglik=14958.36  BIC=-29797.19  converged=True
+  state       mean        sd    stationary   exp.duration
+      0    0.017289  0.006651       0.4312          2.57
+      1    0.028030  0.009417       0.2686          1.59
+      2    0.049126  0.021766       0.3002         23.39
+  transition matrix:
+    0.6108  0.3774  0.0118
+    0.5981  0.3730  0.0289
+    0.0238  0.0190  0.9573
+
+-- Conditional performance ---------------------------------------------------
+         n  hit_rate  mean_pnl   boot_lo   boot_hi  p_le_zero      worst
+regime                                                                  
+0       43    0.6977  185.2036 -213.9735  551.5557     0.1650 -3622.4707
+1       16    0.5625 -215.0557 -875.5349  347.1765     0.7725 -2424.9245
+2       23    0.7826  428.0129  -12.1028  882.7997     0.0300 -2947.7206
+
+  Read this table with three caveats:
+  1. A regime is only useful if the intervals do NOT overlap. Overlapping
+     intervals mean you split a small sample, not that you found a conditional edge.
+  2. Splitting 3 ways is 3 more tests. The p_le_zero column is NOT corrected
+     for that; a Bonferroni-style reading multiplies each by 3. The smallest cell here holds 16 trades.
+  3. The HMM parameters were fitted on the whole bar history, so the state
+     labels are in-sample at the parameter level even though the filter itself
+     uses no future data. See fit_regime(fit_through=...) for the walk-forward version.
+
+VERDICT: NOT ESTABLISHED: the bootstrap cannot reject zero mean P&L. This is a hypothesis, not a result.
+==============================================================================
+
+
+##############################################################################
+# C. 5% half-spread (an ATM straddle into an actual print)
+##############################################################################
+==============================================================================
+EVENT VARIANCE RISK PREMIUM STUDY
+==============================================================================
+Coverage: 82/82 events usable
+
+-- Implied vs realised event move --------------------------------------------
+                                                 value      lo      hi
+metric                                                                
+n events                                       82.0000     NaN     NaN
+mean implied event move                         0.0705     NaN     NaN
+mean |realised| event move                      0.0494     NaN     NaN
+variance premium (implied/realised - 1)         0.3177     NaN     NaN
+mean variance spread (implied^2 - realised^2)   0.0013 -0.0003  0.0026
+median move ratio                               0.6100     NaN     NaN
+mean move ratio                                 0.7082     NaN     NaN
+P(ratio > 1)                                    0.2317     NaN     NaN
+P(ratio > 2)                                    0.0366     NaN     NaN
+ratio 90th pct                                  1.3571     NaN     NaN
+ratio 99th pct                                  2.5791     NaN     NaN
+median implied/realised variance ratio          2.6883     NaN     NaN
+
+-- Short straddle, net of costs ----------------------------------------------
+                                       value
+metric                                      
+trades                               82.0000
+hit rate                              0.6707
+mean net P&L per trade               48.3390
+  bootstrap 95% lo                 -259.8304
+  bootstrap 95% hi                  315.3659
+  P(mean <= 0)                        0.3593
+mean return on credit                 0.0059
+  bootstrap 95% lo                   -0.1489
+  bootstrap 95% hi                    0.1452
+mean winner                         759.1158
+mean loser                        -1399.5396
+worst trade                       -3805.3537
+losers to wipe out all wins          29.8322
+Sharpe (per event)                    0.0087
+skew of returns                      -2.2939
+excess kurtosis                       6.9276
+deflated SR prob (n_trials=40)        0.0189
+min track record length (events)  36666.8513
+
+-- Volatility regime overlay -------------------------------------------------
+  states selected by BIC: 3  (candidates (1, 2, 3))
+  primary evidence -- BIC(k=1) - BIC(k=3) = 3904.7  (positive favours regimes; this is computed on the observations, not on labels)
+  parameters estimated on the FULL sample: state labels are in-sample at the
+  parameter level. Pass fit_regime(fit_through=...) for the walk-forward version.
+  secondary -- Markov-order LR on filtered labels: stat=4528.3 df=4 p=0  [confounded: the filter's own sticky prior induces label dependence, so a small p here is partly the machinery]
+  time-homogeneity LR (2 splits): p=0.988
+  -> states [0, 1] have an expected duration below 3 bars. A state you leave almost immediately is not a regime, it is a flexible density; do not condition a trade on it.
+  GaussianHMM(n_states=3)  loglik=14958.36  BIC=-29797.19  converged=True
+  state       mean        sd    stationary   exp.duration
+      0    0.017289  0.006651       0.4312          2.57
+      1    0.028030  0.009417       0.2686          1.59
+      2    0.049126  0.021766       0.3002         23.39
+  transition matrix:
+    0.6108  0.3774  0.0118
+    0.5981  0.3730  0.0289
+    0.0238  0.0190  0.9573
+
+-- Conditional performance ---------------------------------------------------
+         n  hit_rate  mean_pnl    boot_lo   boot_hi  p_le_zero      worst
+regime                                                                   
+0       43    0.6744   76.7873  -333.1146  445.9761     0.3337 -3805.3537
+1       16    0.5625 -363.7328 -1056.9704  227.8079     0.8725 -2724.1796
+2       23    0.7391  281.8119  -179.9147  749.6065     0.1100 -3274.7707
+
+  Read this table with three caveats:
+  1. A regime is only useful if the intervals do NOT overlap. Overlapping
+     intervals mean you split a small sample, not that you found a conditional edge.
+  2. Splitting 3 ways is 3 more tests. The p_le_zero column is NOT corrected
+     for that; a Bonferroni-style reading multiplies each by 3. The smallest cell here holds 16 trades.
+  3. The HMM parameters were fitted on the whole bar history, so the state
+     labels are in-sample at the parameter level even though the filter itself
+     uses no future data. See fit_regime(fit_through=...) for the walk-forward version.
+
+VERDICT: NOT ESTABLISHED: the bootstrap cannot reject zero mean P&L. This is a hypothesis, not a result.
+==============================================================================
